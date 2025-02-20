@@ -3,6 +3,7 @@ const {z} = require("zod");
 const { User } = require('../db');
 const jwt = require("jsonwebtoken");
 const { jwt_secret } = require('../config');
+const authMiddleware = require('../middleware');
 
 const router = express.Router();
 
@@ -12,8 +13,30 @@ const userSignupSchema = z.object({
     firstName: z.string().max(50),
     lastName: z.string().max(50)
 })
+
+const userSigninSchema = z.object({
+    username: z.string().email(),
+    password: z.string()
+})
+
+const userUpdateSchema = z.object({
+    password: z.string().min(6).optional(),
+    firstName: z.string().max(50).optional(),
+    lastName: z.string().max(50).optional()
+})
+
 function validateSignupInput(obj){
     const response = userSignupSchema.safeParse(obj);
+    return response;
+}
+
+function validateSigninInput(obj){
+    const response = userSigninSchema.safeParse(obj);
+    return response;
+}
+
+function validateUpdateInput(obj){
+    const response = userUpdateSchema.safeParse(obj);
     return response;
 }
 
@@ -57,16 +80,6 @@ router.post("/signup",async(req,res)=>{
     }
 })
 
-const userSigninSchema = z.object({
-    username: z.string().email(),
-    password: z.string()
-})
-
-function validateSigninInput(obj){
-    const response = userSigninSchema.safeParse(obj);
-    return response;
-}
-
 router.post("/signin",async(req,res)=>{
     const validation = validateSigninInput(req.body);
     if(!validation.success){
@@ -74,7 +87,7 @@ router.post("/signin",async(req,res)=>{
             message: "Username and password required"
         })
     }
-    const {username, password} = req.body;
+    const {username, password} = validation.data;
     try{
         const user = await User.findOne({username, password});
         if(!user){
@@ -95,6 +108,29 @@ router.post("/signin",async(req,res)=>{
         })
     }
     
+})
+
+router.put("/update",authMiddleware, async(req, res)=>{
+    const validation = validateUpdateInput(req.body);
+    if(!validation.success){
+        return res.status(411).json({
+            message: "Invalid inputs; password too small"
+        })
+    }
+    const userId = req.userId;
+    try{
+        await User.updateOne({_id: userId},
+            {$set: validation.data}
+        )
+        res.status(200).json({
+            message: "Updated successfully"
+        })
+    } catch(e){
+        console.error(e);
+        res.status(400).json({
+            message: "Couldnot be updated"
+        })
+    }
 })
 
 module.exports = router

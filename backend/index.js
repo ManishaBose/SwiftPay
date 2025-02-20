@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const mainRouter = require("./routes/index")
+const mainRouter = require("./routes/index");
 
 const app = express();
 const port = 3000;

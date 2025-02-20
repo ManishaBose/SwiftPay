@@ -3,8 +3,10 @@ const {jwt_secret} = require('./config')
 function authMiddleware(req, res, next){
     
     const token = req.headers.authorization;
-    if(!token || !token.startsWith('Bearer'))
-        return res.status(403).json({})
+    if(!token || !token.startsWith('Bearer '))
+        return res.status(403).json({
+            message: "Access denied. No token provided"
+    })
     const jwtToken = token.split(" ")[1];
     try{
         const decoded = jwt.verify(jwtToken, jwt_secret);
@@ -12,7 +14,9 @@ function authMiddleware(req, res, next){
         next();
     } catch(e){
         console.error(e);
-        res.status(403).message({})
+        res.status(403).json({
+            message: "Invalid token."
+        })
     }
     
 }
