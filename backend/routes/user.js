@@ -133,4 +133,33 @@ router.put("/update",authMiddleware, async(req, res)=>{
     }
 })
 
+router.get("/bulk", authMiddleware,async(req,res)=>{
+    const filter = req.query.filter
+    try{
+        const users = await User.find({ $or: [{
+            firstName: {
+                $regex: filter,
+                $options: "i"
+            }
+        }, {
+            lastName: {
+                $regex: filter,
+                $options: "i"
+            }
+        }]})
+        res.status(200).json({
+           users: users.map(user=>({
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName
+           }))
+        })
+    }
+    catch(e){
+        console.error(e);
+        res.status(400).json({
+            message: "Could not filter"
+        })
+    }
+})
 module.exports = router
