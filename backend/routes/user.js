@@ -1,6 +1,6 @@
 const express = require('express')
 const {z} = require("zod");
-const { User } = require('../db');
+const { User, Account } = require('../db');
 const jwt = require("jsonwebtoken");
 const { jwt_secret } = require('../config');
 const authMiddleware = require('../middleware');
@@ -65,11 +65,22 @@ router.post("/signup",async(req,res)=>{
             lastName
         });
         const userId = user._id
+        
+        //Initialize a random balance on signup between 1 and 10000
+        //So, that we don't have to integrate with banks and give them a random balance to start with, instead
+        const balance = Math.floor(Math.random()*10000)+1;
+        //create account for new user
+        await Account.create({
+            balance,
+            userId
+        })
+
         const jwtToken = jwt.sign({userId}, jwt_secret);
 
         return res.status(201).json({
             message: "User created successfully",
-            token:jwtToken
+            token:jwtToken,
+            balance: `Congratulations! Your current balance is ${balance}`
         })
     } 
     catch(e){
