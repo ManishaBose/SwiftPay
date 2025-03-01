@@ -8,4 +8,4 @@ This is a payments app.
 - Express.js
 - MongoDB
 - Mongoose
-- React
+- React.js
