@@ -5,6 +5,7 @@ function App() {
   return (
     <>
       Hello World!
+      Hi there!
     </>
   )
 }
