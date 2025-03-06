@@ -1,7 +1,13 @@
+import { AppBar } from "../components/AppBar";
+import { Balance } from "../components/Balance";
+import { Users } from "../components/Users";
+
 export function Dashboard(){
     return(
         <div>
-            I am Dashboard
+            <AppBar/>
+            <Balance value={"5000"}/>
+            <Users/>
         </div>
     )
 }
