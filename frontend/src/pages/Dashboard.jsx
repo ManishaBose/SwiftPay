@@ -6,8 +6,10 @@ export function Dashboard(){
     return(
         <div>
             <AppBar/>
-            <Balance value={"5000"}/>
-            <Users/>
+            <div className="p-5">
+                <Balance value={"5000"}/>
+                <Users/>
+            </div>
         </div>
     )
 }
