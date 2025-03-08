@@ -162,7 +162,8 @@ router.get("/bulk", authMiddleware,async(req,res)=>{
            users: users.map(user=>({
             username: user.username,
             firstName: user.firstName,
-            lastName: user.lastName
+            lastName: user.lastName,
+            id: user._id
            }))
         })
     }

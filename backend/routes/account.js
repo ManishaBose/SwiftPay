@@ -30,6 +30,7 @@ router.get("/balance", authMiddleware, async(req, res)=>{
 router.post("/transfer", authMiddleware, async(req,res)=>{
     const validation = validateTrasferBody(req.body);
     if(!validation.success){
+        console.log("not success")
         return res.status(401).json({
             message: "Invalid account"
         })
