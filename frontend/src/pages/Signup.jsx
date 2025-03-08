@@ -37,6 +37,9 @@ export function Signup(){
                                 username,
                                 password
                             })
+                            //to store the jwt token in the browser
+                            localStorage.setItem("SwiftPay Token:", response.data.token);
+                            //to remove: localStorage.removeItem("SwiftPay Token")
                         }}label={"Sign up"}/>
                     </div>
                     <ButtonWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"}/>

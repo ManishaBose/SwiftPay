@@ -147,7 +147,7 @@ router.put("/update",authMiddleware, async(req, res)=>{
 router.get("/bulk", authMiddleware,async(req,res)=>{
     const filter = req.query.filter
     try{
-        const users = await User.find({ $or: [{
+        const users = filter? await User.find({ $or: [{
             firstName: {
                 $regex: filter,
                 $options: "i"
@@ -157,7 +157,7 @@ router.get("/bulk", authMiddleware,async(req,res)=>{
                 $regex: filter,
                 $options: "i"
             }
-        }]})
+        }]}): await User.find()
         res.status(200).json({
            users: users.map(user=>({
             username: user.username,
