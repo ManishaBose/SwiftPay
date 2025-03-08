@@ -1,26 +1,33 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {Button} from "./Button"
+import axios from "axios";
 
 export function Users(){
-    const [users, setUsers] = useState([{
-        firstName: "Manisha",
-        lastName: "Bose",
-        _id: 1
-    }, {
-        firstName: "Bose",
-        lastName: "Manisha",
-        _id: 2
-    }])
+    const [filter, setFilter] = useState("");
+    const [users, setUsers] = useState([])
+    
+    //to add: debouncing
+    useEffect(()=>{
+        const userToken = localStorage.getItem("SwiftPay Token:")
+        const AuthStr = 'Bearer '.concat(userToken); 
+        axios.get("http://localhost:3000/api/v1/user/bulk", { 
+            headers: { Authorization: AuthStr },
+            params: {filter}
+        }).then(response =>{
+            setUsers(response.data.users);
+        })
+    },[filter])
+
     return(
         <>
         <div className="font-bold mt-6 text-lg">
             Users
         </div>
         <div className="my-2">
-            <input type="text" placeholder="Search users..." className="w-full px-2 py-1 border rounded border-slate-200"></input>
+            <input type="text" placeholder="Search users..." className="w-full px-2 py-1 border rounded border-slate-200" onChange={e=>setFilter(e.target.value)}></input>
         </div>
         <div className="pt-4">
-            {users.map(user => <User user={user} />)}
+            {users.map(user => <User user={user} key={user.username}/>)}
         </div>
     </>
     )
