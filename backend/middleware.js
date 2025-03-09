@@ -4,7 +4,7 @@ function authMiddleware(req, res, next){
     
     const token = req.headers.authorization;
     if(!token || !token.startsWith('Bearer '))
-        return res.status(403).json({
+        return res.status(401).json({
             message: "Access denied. No token provided"
     })
     const jwtToken = token.split(" ")[1];

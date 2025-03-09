@@ -44,7 +44,7 @@ router.post("/signup",async(req,res)=>{
     const validation = validateSignupInput(req.body);
 
     if(!validation.success){
-        return res.status(411).json({
+        return res.status(400).json({
             message: "Incorrect inputs"
         })
     }
@@ -54,7 +54,7 @@ router.post("/signup",async(req,res)=>{
     try{
         const existingUser = await User.findOne({username});
         if(existingUser){
-            return res.status(411).json({
+            return res.status(409).json({
                 message: "Email already taken"
             })
         }
@@ -94,7 +94,7 @@ router.post("/signup",async(req,res)=>{
 router.post("/signin",async(req,res)=>{
     const validation = validateSigninInput(req.body);
     if(!validation.success){
-        return res.status(411).json({
+        return res.status(400).json({
             message: "Username and password required"
         })
     }
@@ -102,8 +102,8 @@ router.post("/signin",async(req,res)=>{
     try{
         const user = await User.findOne({username, password});
         if(!user){
-            return res.status(411).json({
-                message: "Error while logging in"
+            return res.status(401).json({
+                message: "Error while logging in: invalid username or password"
             })
         }
         const userId = user._id
@@ -124,7 +124,7 @@ router.post("/signin",async(req,res)=>{
 router.put("/update",authMiddleware, async(req, res)=>{
     const validation = validateUpdateInput(req.body);
     if(!validation.success){
-        return res.status(411).json({
+        return res.status(400).json({
             message: "Invalid inputs; password too small"
         })
     }
@@ -138,8 +138,8 @@ router.put("/update",authMiddleware, async(req, res)=>{
         })
     } catch(e){
         console.error(e);
-        res.status(400).json({
-            message: "Couldnot be updated"
+        res.status(500).json({
+            message: "Could not be updated due to server error"
         })
     }
 })
@@ -169,8 +169,8 @@ router.get("/bulk", authMiddleware,async(req,res)=>{
     }
     catch(e){
         console.error(e);
-        res.status(400).json({
-            message: "Could not filter"
+        res.status(500).json({
+            message: "Could not filter due to internal server error"
         })
     }
 })

@@ -22,16 +22,15 @@ router.get("/balance", authMiddleware, async(req, res)=>{
         })
     } catch(e){
         console.error(e);
-        res.status(400).json({
-            message: "Could not get balance."
+        res.status(500).json({
+            message: "Internal server error. Could not get balance."
         })
     }
 })
 router.post("/transfer", authMiddleware, async(req,res)=>{
     const validation = validateTrasferBody(req.body);
     if(!validation.success){
-        console.log("not success")
-        return res.status(401).json({
+        return res.status(400).json({
             message: "Invalid account"
         })
     }
@@ -55,8 +54,8 @@ router.post("/transfer", authMiddleware, async(req,res)=>{
 
         if(!toAccount){
             await session.abortTransaction();
-            return res.status(400).json({
-                message: "Invalid account"
+            return res.status(404).json({
+                message: "Invalid account: recepient account not found"
             })
         }
 
