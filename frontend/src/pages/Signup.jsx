@@ -5,8 +5,10 @@ import { SubHeading } from "../components/Subheading";
 import { ButtonWarning } from "../components/ButtonWarning"
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function Signup(){
+    const navigate = useNavigate();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [username, setUsername] = useState("");
@@ -31,15 +33,24 @@ export function Signup(){
                     }} label={"Password"} placeholder={"******"}/>
                     <div className="pt-4">
                         <Button onClick={async()=>{
-                            const response = await axios.post("http://localhost:3000/api/v1/user/signup",{
-                                firstName,
-                                lastName,
-                                username,
-                                password
-                            })
-                            //to store the jwt token in the browser
-                            localStorage.setItem("SwiftPay Token:", response.data.token);
-                            //to remove: localStorage.removeItem("SwiftPay Token")
+                            try{
+                                const response = await axios.post("http://localhost:3000/api/v1/user/signup",{
+                                    firstName,
+                                    lastName,
+                                    username,
+                                    password
+                                })
+                                //to store the jwt token in the browser
+                                localStorage.setItem("SwiftPay Token:", response.data.token);
+                                //to remove: localStorage.removeItem("SwiftPay Token")
+                                navigate("/dashboard")
+                            }catch(e){
+                                if(e.response){
+                                    alert(`Error code: ${e.response.status} ${e.response.data.message}`)
+                                } else{
+                                    alert("Network error. Please check your connection.")
+                                }
+                            }
                         }}label={"Sign up"}/>
                     </div>
                     <ButtonWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"}/>
