@@ -40,9 +40,10 @@ export function Signup(){
                                     username,
                                     password
                                 })
+                                //to remove existing token
+                                localStorage.removeItem("SwiftPay Token:")
                                 //to store the jwt token in the browser
                                 localStorage.setItem("SwiftPay Token:", response.data.token);
-                                //to remove: localStorage.removeItem("SwiftPay Token")
                                 navigate("/dashboard")
                             }catch(e){
                                 if(e.response){
