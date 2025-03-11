@@ -147,6 +147,8 @@ router.put("/update",authMiddleware, async(req, res)=>{
 router.get("/bulk", authMiddleware,async(req,res)=>{
     const filter = req.query.filter
     try{
+        //if you get the entire user data and then filter out the password, it's not safe, because it risks exposing the password through console.log()
+        //hence we apply projection after find({},"projection")
         const users = filter? await User.find({ $or: [{
             firstName: {
                 $regex: filter,
@@ -157,7 +159,7 @@ router.get("/bulk", authMiddleware,async(req,res)=>{
                 $regex: filter,
                 $options: "i"
             }
-        }]}): await User.find()
+        }]}, "username firstName lastName _id"): await User.find({}, "username firstName lastName _id")
         res.status(200).json({
            users: users.map(user=>({
             username: user.username,
@@ -172,6 +174,19 @@ router.get("/bulk", authMiddleware,async(req,res)=>{
         res.status(500).json({
             message: "Could not filter due to internal server error"
         })
+    }
+})
+
+router.get("/me", authMiddleware, async(req,res)=>{
+    try{
+        const userId = req.userId;
+        const response = await User.findOne({_id: userId},"firstName lastName username");
+        console.log(response);
+        res.status(200).json({
+            response
+        })
+    } catch(e){
+        console.error(e);
     }
 })
 module.exports = router
