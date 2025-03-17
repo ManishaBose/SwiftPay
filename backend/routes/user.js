@@ -149,17 +149,17 @@ router.get("/bulk", authMiddleware,async(req,res)=>{
     try{
         //if you get the entire user data and then filter out the password, it's not safe, because it risks exposing the password through console.log()
         //hence we apply projection after find({},"projection")
-        const users = filter? await User.find({ $or: [{
-            firstName: {
-                $regex: filter,
-                $options: "i"
-            }
-        }, {
-            lastName: {
-                $regex: filter,
-                $options: "i"
-            }
-        }]}, "username firstName lastName _id"): await User.find({}, "username firstName lastName _id")
+        const users = filter? await User.find({ 
+            $and: [
+                { _id: { $ne: req.userId } }, // Exclude the current user
+                { 
+                    $or: [
+                        { firstName: { $regex: filter, $options: "i" } },
+                        { lastName: { $regex: filter, $options: "i" } }
+                    ]
+                }
+            ]
+        }, "username firstName lastName _id") : await User.find({_id: {$ne: req.userId}}, "username firstName lastName _id")
         res.status(200).json({
            users: users.map(user=>({
             username: user.username,
