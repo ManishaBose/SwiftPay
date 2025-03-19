@@ -6,7 +6,7 @@ export function Header(){
                     <img src="logo.png" className="h-12 transition-transform duration-300 hover:scale-105"/>
                 </a>
                 <div className="flex justify-center items-center">
-                    <a href="/signup" className="text-lg font-semibold text-gray-700 hover:text-blue-500 transition-colors duration-300 px-4">
+                    <a href="/signin" className="text-lg font-semibold text-gray-700 hover:text-blue-500 transition-colors duration-300 px-4">
                         Signin {"->"}
                     </a>
                     <a href="https://github.com/ManishaBose/SwiftPay" className="border rounded-2xl p-2 transition-colors duration-300 hover:bg-gray-200" target="_blank">
