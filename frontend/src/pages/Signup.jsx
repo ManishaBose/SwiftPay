@@ -30,7 +30,7 @@ export function Signup(){
                     }} label={"Email"} placeholder={"manisha@example.com"}/>
                     <InputBox onChange={e =>{
                         setPassword(e.target.value);
-                    }} label={"Password"} placeholder={"******"}/>
+                    }} label={"Password"} placeholder={"******"} type={"password"}/>
                     <div className="pt-4">
                         <Button onClick={async()=>{
                             try{
