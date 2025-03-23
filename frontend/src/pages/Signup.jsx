@@ -1,7 +1,7 @@
 import { Button } from "../components/Button";
 import { Heading } from "../components/Heading";
 import { InputBox } from "../components/InputBox";
-import { SubHeading } from "../components/Subheading";
+import { SubHeading } from "../components/SubHeading";
 import { ButtonWarning } from "../components/ButtonWarning"
 import { useState } from "react";
 import axios from "axios";
