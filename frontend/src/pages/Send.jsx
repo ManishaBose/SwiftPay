@@ -45,7 +45,7 @@ export function Send(){
                     <button onClick={()=>{
                         const userToken = localStorage.getItem("SwiftPay Token:")
                         const AuthStr = 'Bearer '.concat(userToken); 
-                        axios.post("http://localhost:3000/api/v1/account/transfer",{
+                        axios.post("https://swiftpay-backend.onrender.com/api/v1/account/transfer",{
                             to: id,
                             amount: parseInt(amount)
                         },{

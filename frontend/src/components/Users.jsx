@@ -11,7 +11,7 @@ export function Users(){
     useEffect(()=>{
         const userToken = localStorage.getItem("SwiftPay Token:")
         const AuthStr = 'Bearer '.concat(userToken); 
-        axios.get("http://localhost:3000/api/v1/user/bulk", { 
+        axios.get("https://swiftpay-backend.onrender.com/api/v1/user/bulk", { 
             headers: { Authorization: AuthStr },
             params: {filter}
         }).then(response =>{
